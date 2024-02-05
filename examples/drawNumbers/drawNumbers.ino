@@ -54,6 +54,7 @@ void setup()
     Serial.begin(115200);
     myScreen.begin();
     myScreen.regenerate(); //globally clear screen
+    myScreen.setOrientation(3);
 }
 
 void loop()

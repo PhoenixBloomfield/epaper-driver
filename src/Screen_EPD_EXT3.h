@@ -140,6 +140,7 @@ class Screen_EPD_EXT3_Fast final : public hV_Screen_Buffer, public hV_Utilities_
     ///
     void flush();
 
+    void globalRefresh(uint8_t refresh_cycles);
     ///
     /// @brief Regenerate the panel
     /// @details White-to-black-to-white cycle to reduce ghosting

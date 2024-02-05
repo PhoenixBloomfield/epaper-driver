@@ -483,7 +483,7 @@ void Screen_EPD_EXT3_Fast::begin()
 #elif defined(ARDUINO_ARCH_ESP32)
 
     // Board ESP32-Pico-DevKitM-2 crashes if pins are not specified.
-    SPI.begin(14, 12, 13); // SCK MISO MOSI
+    SPI.begin(b_pin.panelSCK, b_pin.panelMISO, b_pin.panelMOSI);
 
 #else
 
@@ -538,6 +538,7 @@ void Screen_EPD_EXT3_Fast::begin()
     Serial.println(formatString("= PDLS %s v%i.%i.%i", SCREEN_EPD_EXT3_VARIANT, SCREEN_EPD_EXT3_RELEASE / 100, (SCREEN_EPD_EXT3_RELEASE / 10) % 10, SCREEN_EPD_EXT3_RELEASE % 10));
 
     clear();
+    globalRefresh(5);
 }
 
 String Screen_EPD_EXT3_Fast::WhoAmI()
@@ -613,15 +614,38 @@ void Screen_EPD_EXT3_Fast::clear(uint16_t colour)
     }
 }
 
+void Screen_EPD_EXT3_Fast::globalRefresh(uint8_t refresh_cycles) {
+    for(int i = 0; i < refresh_cycles; i++) {
+        clear(myColours.black);
+        flush();
+        delay(100);
+
+        clear(myColours.white);
+        flush();
+        delay(100);
+    }
+}
+
 void Screen_EPD_EXT3_Fast::regenerate()
 {
-    clear(myColours.black);
-    flush();
-    delay(100);
+    // int i;
+    // for(i = 0; i ++; i < 10) {
+        clear(myColours.black);
+        flush();
+        delay(50);
 
-    clear(myColours.white);
-    flush();
-    delay(100);
+        clear(myColours.white);
+        flush();
+        delay(50);
+
+        // clear(myColours.black);
+        // flush();
+        // delay(100);
+
+        // clear(myColours.white);
+        // flush();
+        // delay(100);
+    // }
 }
 
 void Screen_EPD_EXT3_Fast::_setPoint(uint16_t x1, uint16_t y1, uint16_t colour)

@@ -1,24 +1,3 @@
-//
-// hV_Font_Terminal.cpp
-// C++ code
-// ----------------------------------
-//
-// Project highView Library Suite
-//
-// Created by Rei Vilo, 31 Dec 2013
-//
-// Copyright (c) Rei Vilo, 2010-2023
-// Licence All rights reserved
-//
-// * Basic edition: for hobbyists and for basic usage
-// Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
-//
-// * Evaluation edition: for professionals or organisations, evaluation only, no commercial usage
-// All rights reserved
-//
-// * Commercial edition: for professionals or organisations, commercial usage
-// All rights reserved
-//
 
 #include "hV_Font_Terminal.h"
 //#include "hV_Utilities_Common.h"
