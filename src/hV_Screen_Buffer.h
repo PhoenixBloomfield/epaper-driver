@@ -37,6 +37,8 @@
 // Other libraries
 #include "hV_Colours565.h"
 
+#include "sensors.h"
+
 // Common utilities
 #include "hV_Utilities_Common.h"
 
@@ -56,17 +58,6 @@
 class hV_Screen_Buffer : protected hV_Font_Terminal
 {
   public:
-
-    enum Sensor {
-      c02,
-      co, 
-      nox,
-      particles, 
-      temperature,
-      humidity,
-      vocs,
-      methane
-    };
 
     ///
     /// @brief Constructor
@@ -369,9 +360,9 @@ class hV_Screen_Buffer : protected hV_Font_Terminal
 
     virtual void drawSparkfunLogo();
 
-    virtual void drawSensorFrame(Sensor sensorToDraw, uint8_t frameNumber);
+    virtual void drawSensorFrame(uint8_t sensor, uint8_t frameNumber);
 
-    virtual void updateFrameVal(uint8_t frameNumber, Sensor sensorToDraw, String sensorReading);
+    virtual void updateFrameVal(uint8_t frameNumber, uint8_t sensor, String sensorReading);
 
     virtual void drawText(int x, int y, int fontSize, String msg, String color = "black");
 

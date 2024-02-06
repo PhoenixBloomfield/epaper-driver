@@ -538,7 +538,7 @@ void Screen_EPD_EXT3_Fast::begin()
     Serial.println(formatString("= PDLS %s v%i.%i.%i", SCREEN_EPD_EXT3_VARIANT, SCREEN_EPD_EXT3_RELEASE / 100, (SCREEN_EPD_EXT3_RELEASE / 10) % 10, SCREEN_EPD_EXT3_RELEASE % 10));
 
     clear();
-    globalRefresh(5);
+    // globalRefresh(5);
 }
 
 String Screen_EPD_EXT3_Fast::WhoAmI()
