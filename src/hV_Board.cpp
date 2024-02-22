@@ -49,69 +49,22 @@ void hV_Board::b_waitBusy(bool state)
     }
 }
 
-void hV_Board::b_suspend()
-{
-    // Not implemented
-}
-
-void hV_Board::b_resume()
-{
-    // Not implemented
-}
-
-void hV_Board::b_sendIndexFixed(uint8_t index, uint8_t data, uint32_t size)
-{
-    // Not implemented
-}
-
 void hV_Board::b_sendIndexData(uint8_t index, const uint8_t * data, uint32_t size)
 {
     digitalWrite(b_pin.panelDC, LOW); // DC Low
     digitalWrite(b_pin.panelCS, LOW); // CS Low
-    if (b_family == FAMILY_LARGE)
-    {
-        if (b_pin.panelCSS != NOT_CONNECTED)
-        {
-            digitalWrite(b_pin.panelCSS, LOW);
-        }
-        delayMicroseconds(450); // 450 + 50 = 500
-    }
     delayMicroseconds(b_delayCS);
     SPI.transfer(index);
     delayMicroseconds(b_delayCS);
-    if (b_family == FAMILY_LARGE)
-    {
-        if (b_pin.panelCSS != NOT_CONNECTED)
-        {
-            delayMicroseconds(450); // 450 + 50 = 500
-            digitalWrite(b_pin.panelCSS, HIGH);
-        }
-    }
     digitalWrite(b_pin.panelCS, HIGH); // CS High
     digitalWrite(b_pin.panelDC, HIGH); // DC High
     digitalWrite(b_pin.panelCS, LOW); // CS Low
-    if (b_family == FAMILY_LARGE)
-    {
-        if (b_pin.panelCSS != NOT_CONNECTED)
-        {
-            digitalWrite(b_pin.panelCSS, LOW); // CSS Low
-            delayMicroseconds(450); // 450 + 50 = 500
-        }
-    }
     delayMicroseconds(b_delayCS);
     for (uint32_t i = 0; i < size; i++)
     {
         SPI.transfer(data[i]);
     }
     delayMicroseconds(b_delayCS);
-    if (b_family == FAMILY_LARGE)
-    {
-        if (b_pin.panelCSS != NOT_CONNECTED)
-        {
-            delayMicroseconds(450); // 450 + 50 = 500
-            digitalWrite(b_pin.panelCSS, HIGH);
-        }
-    }
     digitalWrite(b_pin.panelCS, HIGH); // CS High
 }
 

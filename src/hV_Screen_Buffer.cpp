@@ -1126,6 +1126,63 @@ void hV_Screen_Buffer::drawNumBig(String number, uint16_t x_location, uint16_t y
     return;
 }
 
+void hV_Screen_Buffer::clearNumDigit(uint8_t numDigit, uint16_t x_location, uint16_t y_location) {
+    uint8_t blankBitmap[] {
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff, //20
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff, //40
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+        0xff,0xff,0xff,0xff,
+
+    };
+    for(int i = 0; i < numDigit; i++) partialScreenBitmap(x_location + i*32, y_location, blankBitmap, 32, 50);
+}
+
 void hV_Screen_Buffer::partialScreenBitmap(uint16_t x_location, uint16_t y_location, uint8_t *bitmap, uint16_t width, uint16_t height, uint16_t highColor, uint16_t lowColor)
 {
     // uint16_t boardWidth = 296;
@@ -2009,12 +2066,18 @@ void hV_Screen_Buffer::drawSensorFrame(uint8_t sensor, uint8_t frameNumber) {
     };
     
     uint8_t baseline_x;
+    if(frameNumber == 1) baseline_x = 148;
+    else baseline_x = 0;
     if(sensor == mySensor.co2) partialScreenBitmap(baseline_x+22, 10, co2_bitmap, 69, 104);
     if(sensor == mySensor.co) partialScreenBitmap(baseline_x+22, 10, co_bitmap, 69, 104);
     if(sensor == mySensor.nox) partialScreenBitmap(baseline_x+22, 10, nox_bitmap, 69, 104);
     if(sensor == mySensor.particles) partialScreenBitmap(baseline_x+22, 10, particles_bitmap, 69, 104);
     if(sensor == mySensor.humidity) partialScreenBitmap(baseline_x+22, 10, humidity_bitmap, 69, 104);
     if(sensor == mySensor.ch4) partialScreenBitmap(baseline_x+22, 10, ch4_bitmap, 69, 104);
+    if(sensor == mySensor.temperature || sensor == mySensor.humidity) {
+        partialScreenBitmap(baseline_x+22, 10, thermometer_bitmap, 69, 56);
+        partialScreenBitmap(baseline_x+22, 90, droplet_bitmap, 69, 56);
+    }
 
     
 
@@ -2024,10 +2087,26 @@ void hV_Screen_Buffer::drawSensorFrame(uint8_t sensor, uint8_t frameNumber) {
     // if(sensor = mySensor.humidity) partialScreenBitmap(baseline_x+22, 80, icons[9], 48, 70);
 }
 
+void hV_Screen_Buffer::clearFrame(uint8_t frame) {
+    for(int i = 0; i < 148; i++){ 
+        for(int j = 0; j < 152; j++) {
+            if(frame) point(j+148, i, myColours.white);
+            else point(j, i, myColours.white);
+        }
+    }
+}
+
 void hV_Screen_Buffer::updateFrameVal(uint8_t frameNumber, uint8_t sensor, String sensorReading) {
+    // clearFrame(frameNumber);
     uint8_t baseline_x;
-    if(frameNumber) baseline_x = 148;
-    drawNumBig(sensorReading, baseline_x+22, 80);
+    if(frameNumber == 1) baseline_x = 148;
+    else baseline_x = 0;
+    if(sensorReading.length() == 2) baseline_x += 16;
+    if(sensorReading.length() == 1) baseline_x += 48;
+    if(sensorReading.length() > 3) baseline_x -= 12;
+    if(sensor == mySensor.humidity) drawNumBig(sensorReading, baseline_x+84, 10);
+    else if (sensor == mySensor.temperature) drawNumBig(sensorReading, baseline_x+84, 90);
+    drawNumBig(sensorReading, baseline_x+22, 90);
 }
 
 void hV_Screen_Buffer::gText(uint16_t x0, uint16_t y0, String text, uint16_t textColour, uint16_t backColour)

@@ -79,15 +79,6 @@ class hV_Board
     void b_reset(uint32_t ms1, uint32_t ms2, uint32_t ms3, uint32_t ms4, uint32_t ms5);
 
     ///
-    /// @brief Send fixed value through SPI
-    /// @param index register
-    /// @param data data, one byte covers 8 pixels
-    /// @param len number of bytes
-    /// @note Valid for all except large screens
-    ///
-    void b_sendIndexFixed(uint8_t index, uint8_t data, uint32_t len);
-
-    ///
     /// @brief Send data through SPI
     /// @param index register
     /// @param data data
@@ -144,16 +135,6 @@ class hV_Board
     /// @note panelDC is kept high, to be changed manually after
     ///
     void b_sendCommandData8(uint8_t command, uint8_t data);
-
-    ///
-    /// @brief Suspend
-    ///
-    void b_suspend();
-
-    ///
-    /// @brief Resume
-    ///
-    void b_resume();
 
     pins_t b_pin;
     uint16_t b_delayCS = 50; // ms

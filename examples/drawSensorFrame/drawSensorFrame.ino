@@ -1,9 +1,9 @@
 
-#include "PDLS_EXT3_Basic_Fast.h"
+  #include "PDLS_EXT3_Basic_Fast.h"
 
-#include "hV_HAL_Peripherals_fast.h"
+  #include "hV_HAL_Peripherals_fast.h"
 
-#include "hV_Configuration_fast.h"
+  #include "hV_Configuration_fast.h"
 
 //DEFAULT BOARD: boardESP32DevKitC
 Screen_EPD_EXT3_Fast myScreen(eScreen_EPD_EXT3_266_0C_Fast);
@@ -49,19 +49,38 @@ const pins_t customPins =
 
 // bool order;
 
+int frame1 = 134;
+int frame2 = 165;
+int refresh = 0;
+
 void setup()
 {
     Serial.begin(115200);
     myScreen.begin();
     myScreen.regenerate(); //globally clear screen
-    myScreen.setOrientation(3);
-    // myScreen.drawSensorFrame(mySensor.co, 0);
-    myScreen.drawSensorFrame(mySensor.co2, 1);
-    // myScreen.partialScreenBitmap(0, 0, co2_bitmap, 75, 144);
+    myScreen.regenerate();
+    myScreen.drawSparkfunLogo();
     myScreen.flush();
+    delay(5000);
+    myScreen.setOrientation(1);
+    myScreen.regenerate();
 }
 
 void loop()
 {
+  myScreen.drawSensorFrame(mySensor.co2, 0);
+  myScreen.drawSensorFrame(mySensor.nox, 1);
+  myScreen.flush();
+  myScreen.updateFrameVal(0, mySensor.co2, (String)frame1);
+  myScreen.updateFrameVal(1, mySensor.nox, (String)frame2);
+  myScreen.flush();
+  frame1 += 7;
+  frame2 += 4;
+  refresh ++;
+  refresh = refresh%60;
+  if(!refresh) myScreen.regenerate();
+  if(frame1 > 999) frame1 = 100;
+  if(frame2 > 999) frame2 = 100;
   delay(1000);
+
 }
